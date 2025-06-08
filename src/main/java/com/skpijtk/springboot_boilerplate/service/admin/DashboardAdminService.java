@@ -1,5 +1,6 @@
 package com.skpijtk.springboot_boilerplate.service.admin;
 
+import com.skpijtk.springboot_boilerplate.dto.request.admin.dashboard.StudentCheckinListQuery;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.common.StudentAttendanceListPageResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.dashboard.CheckinResumeResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.dashboard.StudentTotalResponse;
@@ -9,7 +10,7 @@ public interface DashboardAdminService {
 
     CheckinResumeResponse getCheckinResume();
 
-    // StudentAttendanceListPageResponse getStudentCheckinList();
+    StudentAttendanceListPageResponse getStudentCheckinList(StudentCheckinListQuery query);
 
     // void getStudentAttendanceList();
 }
