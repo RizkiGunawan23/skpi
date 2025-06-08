@@ -1,4 +1,4 @@
-package com.skpijtk.springboot_boilerplate.dto.request.user;
+package com.skpijtk.springboot_boilerplate.dto.request.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

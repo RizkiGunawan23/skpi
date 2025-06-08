@@ -1,4 +1,4 @@
-package com.skpijtk.springboot_boilerplate.dto.response.user;
+package com.skpijtk.springboot_boilerplate.dto.response.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

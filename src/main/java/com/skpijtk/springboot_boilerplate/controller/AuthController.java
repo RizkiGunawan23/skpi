@@ -1,10 +1,10 @@
 package com.skpijtk.springboot_boilerplate.controller;
 
-import com.skpijtk.springboot_boilerplate.dto.request.user.LoginUserRequest;
-import com.skpijtk.springboot_boilerplate.dto.request.user.SignupAdminRequest;
+import com.skpijtk.springboot_boilerplate.dto.request.auth.LoginUserRequest;
+import com.skpijtk.springboot_boilerplate.dto.request.auth.SignupAdminRequest;
 import com.skpijtk.springboot_boilerplate.dto.response.ApiResponse;
-import com.skpijtk.springboot_boilerplate.dto.response.user.LoginUserResponse;
-import com.skpijtk.springboot_boilerplate.dto.response.user.SignupAdminResponse;
+import com.skpijtk.springboot_boilerplate.dto.response.auth.LoginUserResponse;
+import com.skpijtk.springboot_boilerplate.dto.response.auth.SignupAdminResponse;
 import com.skpijtk.springboot_boilerplate.service.AuthService;
 
 import jakarta.validation.Valid;
