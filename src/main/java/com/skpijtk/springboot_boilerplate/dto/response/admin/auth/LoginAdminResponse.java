@@ -1,11 +1,11 @@
-package com.skpijtk.springboot_boilerplate.dto.response.auth;
+package com.skpijtk.springboot_boilerplate.dto.response.admin.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class LoginUserResponse {
+public class LoginAdminResponse {
     private Long idUser;
     private String token;
     private String name;

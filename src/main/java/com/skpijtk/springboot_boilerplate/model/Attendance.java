@@ -11,20 +11,13 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Table(
-    name = "attendance",
-    uniqueConstraints = @UniqueConstraint(columnNames = {"student_id", "attendance_date"})
-)
+@Table(name = "attendance", uniqueConstraints = @UniqueConstraint(columnNames = { "student_id", "attendance_date" }))
 @AllArgsConstructor
 @NoArgsConstructor
 public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
-    private Student student;
 
     @Column(name = "attendance_date", nullable = false)
     private Date attendanceDate;
@@ -55,4 +48,8 @@ public class Attendance {
         TEPAT_WAKTU,
         TERLAMBAT
     }
+
+    @ManyToOne
+    @JoinColumn(name = "student_id", nullable = false)
+    private Student student;
 }

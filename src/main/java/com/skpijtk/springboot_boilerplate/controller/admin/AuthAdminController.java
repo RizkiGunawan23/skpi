@@ -1,11 +1,11 @@
-package com.skpijtk.springboot_boilerplate.controller;
+package com.skpijtk.springboot_boilerplate.controller.admin;
 
-import com.skpijtk.springboot_boilerplate.dto.request.auth.LoginUserRequest;
-import com.skpijtk.springboot_boilerplate.dto.request.auth.SignupAdminRequest;
+import com.skpijtk.springboot_boilerplate.dto.request.admin.auth.LoginAdminRequest;
+import com.skpijtk.springboot_boilerplate.dto.request.admin.auth.SignupAdminRequest;
 import com.skpijtk.springboot_boilerplate.dto.response.ApiResponse;
-import com.skpijtk.springboot_boilerplate.dto.response.auth.LoginUserResponse;
-import com.skpijtk.springboot_boilerplate.dto.response.auth.SignupAdminResponse;
-import com.skpijtk.springboot_boilerplate.service.AuthService;
+import com.skpijtk.springboot_boilerplate.dto.response.admin.auth.LoginAdminResponse;
+import com.skpijtk.springboot_boilerplate.dto.response.admin.auth.SignupAdminResponse;
+import com.skpijtk.springboot_boilerplate.service.admin.AuthAdminService;
 
 import jakarta.validation.Valid;
 
@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/v1")
-public class AuthController {
+public class AuthAdminController {
     @Autowired
-    private AuthService authService;
+    private AuthAdminService authService;
 
     @PostMapping("/admin/signup")
     public ResponseEntity<ApiResponse<SignupAdminResponse>> signupAdmin(
@@ -33,9 +33,9 @@ public class AuthController {
     }
 
     @PostMapping("/admin/login")
-    public ResponseEntity<ApiResponse<LoginUserResponse>> loginAdmin(@Valid @RequestBody LoginUserRequest request) {
-        LoginUserResponse responseData = authService.loginAdmin(request);
-        ApiResponse<LoginUserResponse> response = new ApiResponse<>(responseData, "Login successful");
+    public ResponseEntity<ApiResponse<LoginAdminResponse>> loginAdmin(@Valid @RequestBody LoginAdminRequest request) {
+        LoginAdminResponse responseData = authService.loginAdmin(request);
+        ApiResponse<LoginAdminResponse> response = new ApiResponse<>(responseData, "Login successful");
         return ResponseEntity.ok(response);
     }
 }

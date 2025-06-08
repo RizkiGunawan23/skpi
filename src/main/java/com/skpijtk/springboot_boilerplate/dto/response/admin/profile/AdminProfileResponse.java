@@ -1,4 +1,4 @@
-package com.skpijtk.springboot_boilerplate.dto.response.admin;
+package com.skpijtk.springboot_boilerplate.dto.response.admin.profile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
