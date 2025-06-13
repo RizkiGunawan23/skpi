@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class StudentAttendanceListResponse {
+public class StudentListResponse {
     private int studentId;
     private int userId;
     private String studentName;

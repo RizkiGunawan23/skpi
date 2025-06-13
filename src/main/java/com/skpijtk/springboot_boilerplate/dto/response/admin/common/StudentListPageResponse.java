@@ -7,8 +7,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class StudentAttendanceListPageResponse {
-    private List<StudentAttendanceListResponse> data;
+public class StudentListPageResponse {
+    private List<StudentListResponse> data;
     private int totalData;
     private int totalPage;
     private int currentPage;

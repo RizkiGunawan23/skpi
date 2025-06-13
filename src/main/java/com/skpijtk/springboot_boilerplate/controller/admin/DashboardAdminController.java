@@ -5,9 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.skpijtk.springboot_boilerplate.dto.request.admin.dashboard.StudentAttendanceListQuery;
 import com.skpijtk.springboot_boilerplate.dto.request.admin.dashboard.StudentCheckinListQuery;
+import com.skpijtk.springboot_boilerplate.dto.request.admin.dashboard.StudentListQuery;
 import com.skpijtk.springboot_boilerplate.dto.response.ApiResponse;
-import com.skpijtk.springboot_boilerplate.dto.response.admin.common.StudentAttendanceListPageResponse;
+import com.skpijtk.springboot_boilerplate.dto.response.admin.common.StudentListPageResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.dashboard.CheckinResumeResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.dashboard.StudentTotalResponse;
 import com.skpijtk.springboot_boilerplate.service.admin.DashboardAdminService;
@@ -37,10 +39,30 @@ public class DashboardAdminController {
     }
 
     @GetMapping("/admin/list_checkin_mahasiswa")
-    public ResponseEntity<ApiResponse<StudentAttendanceListPageResponse>> getSgetStudentCheckinListtudentCheckin(
+    public ResponseEntity<ApiResponse<StudentListPageResponse>> getStudentCheckinList(
             @ModelAttribute StudentCheckinListQuery query) {
-        StudentAttendanceListPageResponse responseData = dashboardAdminService.getStudentCheckinList(query);
-        ApiResponse<StudentAttendanceListPageResponse> response = new ApiResponse<StudentAttendanceListPageResponse>(
+        StudentListPageResponse responseData = dashboardAdminService.getStudentCheckinList(query);
+        ApiResponse<StudentListPageResponse> response = new ApiResponse<StudentListPageResponse>(
+                responseData,
+                "Data successfully displayed");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/admin/list_attendance_mahasiswa")
+    public ResponseEntity<ApiResponse<StudentListPageResponse>> getStudentAttendanceList(
+            @ModelAttribute StudentAttendanceListQuery query) {
+        StudentListPageResponse responseData = dashboardAdminService.getStudentAttendanceList(query);
+        ApiResponse<StudentListPageResponse> response = new ApiResponse<StudentListPageResponse>(
+                responseData,
+                "Data successfully displayed");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/admin/list_all_mahasiswa")
+    public ResponseEntity<ApiResponse<StudentListPageResponse>> getStudentList(
+            @ModelAttribute StudentListQuery query) {
+        StudentListPageResponse responseData = dashboardAdminService.getStudentList(query);
+        ApiResponse<StudentListPageResponse> response = new ApiResponse<StudentListPageResponse>(
                 responseData,
                 "Data successfully displayed");
         return ResponseEntity.ok(response);
