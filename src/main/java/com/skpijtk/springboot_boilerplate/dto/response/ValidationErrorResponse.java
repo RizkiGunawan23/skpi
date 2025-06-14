@@ -9,6 +9,4 @@ import lombok.Data;
 public class ValidationErrorResponse {
     private Object data;
     private List<FieldErrorResponse> errors;
-    private int statusCode;
-    private String status;
 }

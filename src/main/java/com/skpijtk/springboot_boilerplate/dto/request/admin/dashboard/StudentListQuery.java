@@ -7,6 +7,6 @@ public class StudentListQuery {
     private String student_name;
     private String startdate;
     private String enddate;
-    private int page = 0;
-    private int size = 10;
+    private String page = "0";
+    private String size = "10";
 }

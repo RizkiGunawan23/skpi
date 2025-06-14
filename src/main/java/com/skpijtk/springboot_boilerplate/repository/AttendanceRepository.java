@@ -2,8 +2,11 @@ package com.skpijtk.springboot_boilerplate.repository;
 
 import com.skpijtk.springboot_boilerplate.model.Attendance;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -23,5 +26,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
         Page<Attendance> findAllByAttendanceDateBetween(
                         java.sql.Date start, java.sql.Date end, Pageable pageable);
+
+        List<Attendance> findAllByStudent_Id(Long studentId, Sort sort);
 
 }

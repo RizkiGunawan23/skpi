@@ -3,7 +3,7 @@ package com.skpijtk.springboot_boilerplate.service.admin.impl;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.skpijtk.springboot_boilerplate.dto.response.admin.profile.AdminProfileResponse;
@@ -22,7 +22,7 @@ public class ProfileAdminServiceImpl implements ProfileAdminService {
         Optional<User> user = userRepository.findByEmail(email);
 
         if (!user.isPresent()) {
-            throw new ApiException("User not found with email: " + email, HttpStatusCode.valueOf(404));
+            throw new ApiException("User not found with email: " + email, HttpStatus.NOT_FOUND);
         }
 
         User foundUser = user.get();

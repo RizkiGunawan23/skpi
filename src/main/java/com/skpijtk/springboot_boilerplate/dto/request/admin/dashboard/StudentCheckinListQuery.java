@@ -9,6 +9,6 @@ public class StudentCheckinListQuery {
     private String enddate;
     private String sortBy = "nim";
     private String sortDir = "asc";
-    private int page = 0;
-    private int size = 10;
+    private String page = "0";
+    private String size = "10";
 }

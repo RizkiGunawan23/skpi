@@ -10,12 +10,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.skpijtk.springboot_boilerplate.dto.request.admin.dashboard.StudentAttendanceListQuery;
 import com.skpijtk.springboot_boilerplate.dto.request.admin.dashboard.StudentCheckinListQuery;
-import com.skpijtk.springboot_boilerplate.dto.request.admin.dashboard.StudentListQuery;
+import com.skpijtk.springboot_boilerplate.dto.response.FieldErrorResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.common.AttendanceDataResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.common.StudentListPageResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.common.StudentListResponse;
@@ -27,6 +27,8 @@ import com.skpijtk.springboot_boilerplate.model.Student;
 import com.skpijtk.springboot_boilerplate.repository.AttendanceRepository;
 import com.skpijtk.springboot_boilerplate.repository.StudentRepository;
 import com.skpijtk.springboot_boilerplate.service.admin.DashboardAdminService;
+import com.skpijtk.springboot_boilerplate.validation.StudentAttendanceListValidator;
+import com.skpijtk.springboot_boilerplate.validation.StudentCheckinListValidator;
 
 @Service
 public class DashboardAdminServiceImpl implements DashboardAdminService {
@@ -67,44 +69,42 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
 
     @Override
     public StudentListPageResponse getStudentCheckinList(StudentCheckinListQuery query) {
-        List<String> allowedSortBy = List.of("nim", "status");
-
-        if (!allowedSortBy.contains(query.getSortBy()))
-            throw new ApiException("Invalid sort by value", HttpStatusCode.valueOf(400));
-
-        if (!query.getSortDir().equalsIgnoreCase("asc") && !query.getSortDir().equalsIgnoreCase("desc"))
-            throw new ApiException("Invalid sort direction value", HttpStatusCode.valueOf(400));
-
-        if (query.getPage() < 0 || query.getSize() <= 0)
-            throw new ApiException("Page must >= 0 and size must > 0", HttpStatusCode.valueOf(400));
-
-        final LocalDate start = (query.getStartdate() != null && !query.getStartdate().isBlank())
-                ? LocalDate.parse(query.getStartdate())
-                : null;
-        final LocalDate end = (query.getEnddate() != null && !query.getEnddate().isBlank())
-                ? LocalDate.parse(query.getEnddate())
-                : null;
-        if (start != null && end != null && start.isAfter(end)) {
-            throw new ApiException("Start date must be before or equal to end date", HttpStatusCode.valueOf(400));
+        List<FieldErrorResponse> errors = StudentCheckinListValidator.validate(query);
+        if (!errors.isEmpty()) {
+            throw new ApiException(errors);
         }
 
-        Pageable pageable = PageRequest.of(query.getPage(), query.getSize(), Sort.by(Sort.Direction.ASC, "id"));
+        String studentNameQuery = null;
+        if (query.getStudent_name() != null && !query.getStudent_name().isBlank()) {
+            studentNameQuery = query.getStudent_name();
+        }
+        LocalDate start = null, end = null;
+        if (query.getStartdate() != null && !query.getStartdate().isBlank()) {
+            start = LocalDate.parse(query.getStartdate());
+        }
+        if (query.getEnddate() != null && !query.getEnddate().isBlank()) {
+            end = LocalDate.parse(query.getEnddate());
+        }
+        int page = query.getPage() != null && !query.getPage().isBlank() ? Integer.parseInt(query.getPage()) : 0;
+        int size = query.getSize() != null && !query.getSize().isBlank() ? Integer.parseInt(query.getSize()) : 10;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
 
         Page<Attendance> attendancePage;
-        if (query.getStudent_name() != null && !query.getStudent_name().isBlank()) {
+        if (studentNameQuery != null && !studentNameQuery.isBlank()) {
             if (start != null && end != null) {
                 attendancePage = attendanceRepository
                         .findAllByStudent_User_NameIgnoreCaseContainingAndAttendanceDateBetween(
-                                query.getStudent_name(), java.sql.Date.valueOf(start), java.sql.Date.valueOf(end),
+                                studentNameQuery, java.sql.Date.valueOf(start), java.sql.Date.valueOf(end),
                                 pageable);
             } else if (start != null) {
                 attendancePage = attendanceRepository
                         .findAllByStudent_User_NameIgnoreCaseContainingAndAttendanceDateBetween(
-                                query.getStudent_name(), java.sql.Date.valueOf(start), java.sql.Date.valueOf(start),
+                                studentNameQuery, java.sql.Date.valueOf(start), java.sql.Date.valueOf(start),
                                 pageable);
             } else {
                 attendancePage = attendanceRepository.findAllByStudent_User_NameIgnoreCaseContaining(
-                        query.getStudent_name(), pageable);
+                        studentNameQuery, pageable);
             }
         } else if (start != null && end != null) {
             attendancePage = attendanceRepository.findAllByAttendanceDateBetween(
@@ -117,7 +117,7 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
         }
 
         if (attendancePage.getContent().isEmpty()) {
-            throw new ApiException("Student data not found.", HttpStatusCode.valueOf(404));
+            throw new ApiException("Student data not found.", HttpStatus.NOT_FOUND);
         }
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -127,8 +127,8 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
             Student student = attendance.getStudent();
             String studentName = student.getUser().getName();
             // Filter nama mahasiswa (partial, case-insensitive)
-            if (query.getStudent_name() != null && !query.getStudent_name().isBlank()) {
-                if (!studentName.toLowerCase().contains(query.getStudent_name().toLowerCase())) {
+            if (studentNameQuery != null && !studentNameQuery.isBlank()) {
+                if (!studentName.toLowerCase().contains(studentNameQuery.toLowerCase())) {
                     continue;
                 }
             }
@@ -178,30 +178,35 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
                 data,
                 (int) attendancePage.getTotalElements(),
                 attendancePage.getTotalPages(),
-                query.getPage(),
-                query.getSize());
+                page,
+                size);
     }
 
     @Override
     public StudentListPageResponse getStudentAttendanceList(StudentAttendanceListQuery query) {
-        if (query.getPage() < 0 || query.getSize() <= 0)
-            throw new ApiException("Page must >= 0 and size must > 0", HttpStatusCode.valueOf(400));
-
-        final LocalDate start = (query.getStartdate() != null && !query.getStartdate().isBlank())
-                ? LocalDate.parse(query.getStartdate())
-                : null;
-        final LocalDate end = (query.getEnddate() != null && !query.getEnddate().isBlank())
-                ? LocalDate.parse(query.getEnddate())
-                : null;
-        if (start != null && end != null && start.isAfter(end)) {
-            throw new ApiException("Start date must be before or equal to end date", HttpStatusCode.valueOf(400));
+        List<FieldErrorResponse> errors = StudentAttendanceListValidator.validate(query);
+        if (!errors.isEmpty()) {
+            throw new ApiException(errors);
         }
 
-        Pageable pageable = PageRequest.of(query.getPage(), query.getSize(), Sort.by(Sort.Direction.ASC, "id"));
+        Long studentId = null;
+        if (query.getStudent_id() != null && !query.getStudent_id().isBlank()) {
+            studentId = Long.valueOf(query.getStudent_id());
+        }
+        LocalDate start = null, end = null;
+        if (query.getStartdate() != null && !query.getStartdate().isBlank()) {
+            start = LocalDate.parse(query.getStartdate());
+        }
+        if (query.getEnddate() != null && !query.getEnddate().isBlank()) {
+            end = LocalDate.parse(query.getEnddate());
+        }
+        int page = query.getPage() != null && !query.getPage().isBlank() ? Integer.parseInt(query.getPage()) : 0;
+        int size = query.getSize() != null && !query.getSize().isBlank() ? Integer.parseInt(query.getSize()) : 10;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
 
         Page<Attendance> attendancePage;
-        if (query.getStudent_id() != null && !query.getStudent_id().isBlank()) {
-            Long studentId = Long.valueOf(query.getStudent_id());
+        if (studentId != null) {
             if (start != null && end != null) {
                 attendancePage = attendanceRepository.findAllByStudent_IdAndAttendanceDateBetween(
                         studentId, java.sql.Date.valueOf(start), java.sql.Date.valueOf(end), pageable);
@@ -222,7 +227,7 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
         }
 
         if (attendancePage.getContent().isEmpty()) {
-            throw new ApiException("Student data not found.", HttpStatusCode.valueOf(404));
+            throw new ApiException("Student data not found.", HttpStatus.NOT_FOUND);
         }
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -254,104 +259,13 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
                     attendanceData));
         }
 
-        data.sort((a, b) -> {
-            return a.getNim().compareToIgnoreCase(b.getNim());
-        });
+        data.sort((a, b) -> a.getNim().compareToIgnoreCase(b.getNim()));
 
         return new StudentListPageResponse(
                 data,
                 (int) attendancePage.getTotalElements(),
                 attendancePage.getTotalPages(),
-                query.getPage(),
-                query.getSize());
-    }
-
-    @Override
-    public StudentListPageResponse getStudentList(StudentListQuery query) {
-        if (query.getPage() < 0 || query.getSize() <= 0)
-            throw new ApiException("Page must >= 0 and size must > 0", HttpStatusCode.valueOf(400));
-
-        final LocalDate start = (query.getStartdate() != null && !query.getStartdate().isBlank())
-                ? LocalDate.parse(query.getStartdate())
-                : null;
-        final LocalDate end = (query.getEnddate() != null && !query.getEnddate().isBlank())
-                ? LocalDate.parse(query.getEnddate())
-                : null;
-        if (start != null && end != null && start.isAfter(end)) {
-            throw new ApiException("Start date must be before or equal to end date", HttpStatusCode.valueOf(400));
-        }
-
-        Pageable pageable = PageRequest.of(query.getPage(), query.getSize(), Sort.by(Sort.Direction.ASC, "id"));
-
-        Page<Attendance> attendancePage;
-        if (query.getStudent_name() != null && !query.getStudent_name().isBlank()) {
-            String studentName = String.valueOf(query.getStudent_name());
-            if (start != null && end != null) {
-                attendancePage = attendanceRepository
-                        .findAllByStudent_User_NameIgnoreCaseContainingAndAttendanceDateBetween(
-                                studentName, java.sql.Date.valueOf(start), java.sql.Date.valueOf(end), pageable);
-            } else if (start != null) {
-                attendancePage = attendanceRepository
-                        .findAllByStudent_User_NameIgnoreCaseContainingAndAttendanceDateBetween(
-                                studentName, java.sql.Date.valueOf(start), java.sql.Date.valueOf(start), pageable);
-            } else {
-                attendancePage = attendanceRepository.findAllByStudent_User_NameIgnoreCaseContaining(studentName,
-                        pageable);
-            }
-        } else if (start != null && end != null) {
-            attendancePage = attendanceRepository
-                    .findAllByAttendanceDateBetween(
-                            java.sql.Date.valueOf(start), java.sql.Date.valueOf(end), pageable);
-        } else if (start != null) {
-            attendancePage = attendanceRepository
-                    .findAllByAttendanceDateBetween(
-                            java.sql.Date.valueOf(start), java.sql.Date.valueOf(start), pageable);
-        } else {
-            attendancePage = attendanceRepository.findAll(pageable);
-        }
-
-        if (attendancePage.getContent().isEmpty()) {
-            throw new ApiException("Student data not found.", HttpStatusCode.valueOf(404));
-        }
-
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        List<StudentListResponse> data = new ArrayList<>();
-        for (Attendance attendance : attendancePage.getContent()) {
-            Student student = attendance.getStudent();
-
-            String status = attendance.getCheckInStatus() != null ? attendance.getCheckInStatus().name()
-                    : "BELUM_CHECKOUT";
-            AttendanceDataResponse attendanceData = new AttendanceDataResponse(
-                    attendance.getId(),
-                    attendance.getCheckInTime() != null ? attendance.getCheckInTime().format(dateTimeFormatter) : null,
-                    attendance.getCheckOutTime() != null ? attendance.getCheckOutTime().format(dateTimeFormatter)
-                            : null,
-                    attendance.getAttendanceDate() != null
-                            ? attendance.getAttendanceDate().toLocalDate().format(dateFormatter)
-                            : null,
-                    attendance.getCheckInStatus() == Attendance.CheckInStatus.TERLAMBAT,
-                    attendance.getCheckInNotes(),
-                    attendance.getCheckOutNotes(),
-                    status);
-            data.add(new StudentListResponse(
-                    student.getId().intValue(),
-                    student.getUser().getId().intValue(),
-                    student.getUser().getName(),
-                    student.getSin(),
-                    student.getUser().getEmail(),
-                    attendanceData));
-        }
-
-        data.sort((a, b) -> {
-            return a.getNim().compareToIgnoreCase(b.getNim());
-        });
-
-        return new StudentListPageResponse(
-                data,
-                (int) attendancePage.getTotalElements(),
-                attendancePage.getTotalPages(),
-                query.getPage(),
-                query.getSize());
+                page,
+                size);
     }
 }

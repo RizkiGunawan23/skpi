@@ -1,13 +1,11 @@
 package com.skpijtk.springboot_boilerplate.service.admin;
 
+import com.skpijtk.springboot_boilerplate.dto.request.admin.dashboard.StudentListQuery;
+import com.skpijtk.springboot_boilerplate.dto.response.admin.common.StudentListPageResponse;
+import com.skpijtk.springboot_boilerplate.dto.response.admin.dashboard.StudentDetailResponse;
+
 public interface StudentManagementService {
-    void getStudentList();
+    StudentListPageResponse getStudentList(StudentListQuery query);
 
-    void getStudentById();
-
-    void createStudent();
-
-    void updateStudent();
-
-    void deleteStudent();
+    StudentDetailResponse getStudentDetail(Long studentId);
 }
