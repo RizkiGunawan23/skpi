@@ -18,6 +18,7 @@ public enum ResponseMessage {
     INTERNAL_SERVER_ERROR("Internal server error. Please try again later"),
     STUDENT_NOT_FOUND("Student data not found"),
     USER_NOT_FOUND("User not found with email {email}"),
+    APP_SETTINGS_NOT_FOUND("App settings not found"),
     DATA_DISPLAY_ERROR("Data failed to display"),
     DELETE_STUDENT_FAILED("Student {studentName} deletion failed"),
     EMAIL_ALREADY_EXISTS("Email has been used"),
