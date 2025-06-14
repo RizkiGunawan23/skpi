@@ -1,4 +1,4 @@
-package com.tujuhsembilan.springboot_boilerplate;
+package com.skpijtk.springboot_boilerplate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
