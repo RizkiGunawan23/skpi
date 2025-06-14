@@ -5,6 +5,7 @@ public enum ResponseMessage {
     LOGIN_SUCCESS("Login successful"),
     STUDENT_FOUND("Student data successfully found"),
     DATA_DISPLAY_SUCCESS("Data successfully displayed"),
+    UPDATE_STUDENT_SUCCESS("Student {studentName} successfully updated"),
     DELETE_STUDENT_SUCCESS("Student {studentName} successfully deleted"),
     CHECKIN_SUCCESS("Checkin successful"),
     CHECKOUT_SUCCESS("Checkout successful"),

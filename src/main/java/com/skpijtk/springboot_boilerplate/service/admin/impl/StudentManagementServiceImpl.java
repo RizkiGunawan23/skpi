@@ -1,6 +1,5 @@
 package com.skpijtk.springboot_boilerplate.service.admin.impl;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -19,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.skpijtk.springboot_boilerplate.constant.ResponseMessage;
 import com.skpijtk.springboot_boilerplate.dto.request.admin.studentmanagement.CreateStudentRequest;
 import com.skpijtk.springboot_boilerplate.dto.request.admin.studentmanagement.StudentListQuery;
+import com.skpijtk.springboot_boilerplate.dto.request.admin.studentmanagement.UpdateStudentRequest;
 import com.skpijtk.springboot_boilerplate.dto.response.FieldErrorResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.common.AttendanceDataResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.common.StudentListPageResponse;
@@ -32,7 +32,7 @@ import com.skpijtk.springboot_boilerplate.repository.AttendanceRepository;
 import com.skpijtk.springboot_boilerplate.repository.StudentRepository;
 import com.skpijtk.springboot_boilerplate.repository.UserRepository;
 import com.skpijtk.springboot_boilerplate.service.admin.StudentManagementService;
-import com.skpijtk.springboot_boilerplate.validation.CreateStudentValidator;
+import com.skpijtk.springboot_boilerplate.validation.CreateUpdateStudentValidator;
 import com.skpijtk.springboot_boilerplate.validation.StudentListValidator;
 
 @Service
@@ -197,8 +197,7 @@ public class StudentManagementServiceImpl implements StudentManagementService {
         @Override
         @Transactional
         public StudentResponse createStudent(CreateStudentRequest request) {
-                LocalDate joinDate = LocalDate.now();
-                List<FieldErrorResponse> errors = CreateStudentValidator.validate(request, joinDate);
+                List<FieldErrorResponse> errors = CreateUpdateStudentValidator.validate(request, LocalDate.now());
 
                 if (request.getNim() != null && studentRepository.existsBySin(request.getNim()))
                         errors.add(new FieldErrorResponse("nim", "NIM already exists"));
@@ -219,7 +218,43 @@ public class StudentManagementServiceImpl implements StudentManagementService {
                 Student student = new Student();
                 student.setSin(request.getNim());
                 student.setUser(user);
-                // student.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+                student = studentRepository.save(student);
+
+                return new StudentResponse(
+                                student.getId().intValue(),
+                                user.getId().intValue(),
+                                user.getName(),
+                                student.getSin(),
+                                user.getEmail(),
+                                new ArrayList<>());
+        }
+
+        @Override
+        @Transactional
+        public StudentResponse updateStudent(UpdateStudentRequest request, Long studentId) {
+                Student student = studentRepository.findById(studentId)
+                                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
+                                                ResponseMessage.STUDENT_NOT_FOUND));
+
+                List<FieldErrorResponse> errors = CreateUpdateStudentValidator.validate(request, LocalDate.now());
+
+                if (request.getNim() != null && !request.getNim().equals(student.getSin())
+                                && studentRepository.existsBySin(request.getNim()))
+                        errors.add(new FieldErrorResponse("nim", "NIM already exists"));
+
+                if (request.getEmail() != null && !request.getEmail().equals(student.getUser().getEmail())
+                                && userRepository.existsByEmail(request.getEmail()))
+                        errors.add(new FieldErrorResponse("email", ResponseMessage.EMAIL_ALREADY_EXISTS));
+
+                if (!errors.isEmpty())
+                        throw new ApiException(errors);
+
+                User user = student.getUser();
+                user.setName(request.getStudentName());
+                user.setEmail(request.getEmail());
+                user = userRepository.save(user);
+
+                student.setSin(request.getNim());
                 student = studentRepository.save(student);
 
                 return new StudentResponse(

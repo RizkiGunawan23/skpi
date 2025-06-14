@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.skpijtk.springboot_boilerplate.constant.ResponseMessage;
 import com.skpijtk.springboot_boilerplate.dto.request.admin.studentmanagement.CreateStudentRequest;
 import com.skpijtk.springboot_boilerplate.dto.request.admin.studentmanagement.StudentListQuery;
+import com.skpijtk.springboot_boilerplate.dto.request.admin.studentmanagement.UpdateStudentRequest;
 import com.skpijtk.springboot_boilerplate.dto.response.ApiResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.common.StudentListPageResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.studentmanagement.StudentResponse;
@@ -21,6 +22,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api/v1/admin/")
@@ -57,4 +59,13 @@ public class StudentManagementController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PutMapping("edit-mahasiswa/{id}")
+    public ResponseEntity<ApiResponse<StudentResponse>> updateStudent(@PathVariable("id") Long studentId,
+            @Valid @RequestBody UpdateStudentRequest request) {
+        StudentResponse responseData = studentManagementService.updateStudent(request, studentId);
+        ApiResponse<StudentResponse> response = new ApiResponse<>(
+                responseData,
+                ResponseMessage.UPDATE_STUDENT_SUCCESS.format(responseData.getStudentName()));
+        return ResponseEntity.ok(response);
+    }
 }

@@ -39,6 +39,12 @@ public class GlobalExceptionHandler {
         public ResponseEntity<ValidationErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
                 List<FieldErrorResponse> errors = ex.getBindingResult().getFieldErrors().stream()
                                 .map(error -> new FieldErrorResponse(error.getField(), error.getDefaultMessage()))
+                                .sorted((a, b) -> {
+                                        int cmp = a.getField().compareToIgnoreCase(b.getField());
+                                        if (cmp != 0)
+                                                return cmp;
+                                        return a.getMessage().compareToIgnoreCase(b.getMessage());
+                                })
                                 .collect(Collectors.toList());
 
                 ValidationErrorResponse response = new ValidationErrorResponse(null, errors);
@@ -82,9 +88,17 @@ public class GlobalExceptionHandler {
         @ExceptionHandler(ApiException.class)
         public ResponseEntity<?> handleApiException(ApiException ex) {
                 if (ex.getFieldErrors() != null) {
+                        List<FieldErrorResponse> sortedErrors = ex.getFieldErrors().stream()
+                                        .sorted((a, b) -> {
+                                                int cmp = a.getField().compareToIgnoreCase(b.getField());
+                                                if (cmp != 0)
+                                                        return cmp;
+                                                return a.getMessage().compareToIgnoreCase(b.getMessage());
+                                        })
+                                        .collect(Collectors.toList());
                         ValidationErrorResponse response = new ValidationErrorResponse(
                                         null,
-                                        ex.getFieldErrors());
+                                        sortedErrors);
                         return ResponseEntity.status(ex.getStatusCode()).body(response);
                 } else {
                         ApiResponse<Object> response = new ApiResponse<>(
