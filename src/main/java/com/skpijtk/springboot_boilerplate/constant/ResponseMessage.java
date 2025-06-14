@@ -25,7 +25,12 @@ public enum ResponseMessage {
     EMAIL_ALREADY_EXISTS("Email has been used"),
     CHECKIN_FAILED("Checkin failed because the note is empty"),
     CHECKOUT_FAILED("Checkout failed because the note is empty"),
-    DATA_SAVE_FAILED("Data failed to saved");
+    DATA_SAVE_FAILED("Data failed to saved"),
+    STUDENT_ALREADY_CHECKED_IN("Student {studentName} has already checked in today"),
+    STUDENT_NOT_YET_CHECKED_OUT_YESTERDAY(
+            "Student {studentName} has not checked out yesterday, please check out first"),
+    STUDENT_NOT_YET_CHECK_IN_TODAY("Student {studentName} has not checked in today, please check in first"),
+    STUDENT_ALREADY_CHECKED_OUT("Student {studentName} has already checked out today");
 
     private final String message;
 

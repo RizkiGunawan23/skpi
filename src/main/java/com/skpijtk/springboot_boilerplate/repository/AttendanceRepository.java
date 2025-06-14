@@ -29,4 +29,5 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
         List<Attendance> findAllByStudent_Id(Long studentId, Sort sort);
 
+        List<Attendance> findAllByStudent_IdAndCheckOutTimeIsNullOrderByAttendanceDateAsc(Long studentId);
 }

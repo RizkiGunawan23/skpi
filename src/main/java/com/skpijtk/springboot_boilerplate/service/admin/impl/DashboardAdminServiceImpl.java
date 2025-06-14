@@ -103,6 +103,11 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
                         .findAllByStudent_User_NameIgnoreCaseContainingAndAttendanceDateBetween(
                                 studentNameQuery, java.sql.Date.valueOf(start), java.sql.Date.valueOf(start),
                                 pageable);
+            } else if (end != null) {
+                attendancePage = attendanceRepository
+                        .findAllByStudent_User_NameIgnoreCaseContainingAndAttendanceDateBetween(
+                                studentNameQuery, java.sql.Date.valueOf(end), java.sql.Date.valueOf(end),
+                                pageable);
             } else {
                 attendancePage = attendanceRepository.findAllByStudent_User_NameIgnoreCaseContaining(
                         studentNameQuery, pageable);
@@ -113,6 +118,9 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
         } else if (start != null) {
             attendancePage = attendanceRepository.findAllByAttendanceDateBetween(
                     java.sql.Date.valueOf(start), java.sql.Date.valueOf(start), pageable);
+        } else if (end != null) {
+            attendancePage = attendanceRepository.findAllByAttendanceDateBetween(
+                    java.sql.Date.valueOf(end), java.sql.Date.valueOf(end), pageable);
         } else {
             attendancePage = attendanceRepository.findAll(pageable);
         }
@@ -214,6 +222,9 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
             } else if (start != null) {
                 attendancePage = attendanceRepository.findAllByStudent_IdAndAttendanceDateBetween(
                         studentId, java.sql.Date.valueOf(start), java.sql.Date.valueOf(start), pageable);
+            } else if (end != null) {
+                attendancePage = attendanceRepository.findAllByStudent_IdAndAttendanceDateBetween(
+                        studentId, java.sql.Date.valueOf(end), java.sql.Date.valueOf(end), pageable);
             } else {
                 attendancePage = attendanceRepository.findAllByStudent_Id(studentId, pageable);
             }
@@ -223,6 +234,9 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
         } else if (start != null) {
             attendancePage = attendanceRepository.findAllByAttendanceDateBetween(
                     java.sql.Date.valueOf(start), java.sql.Date.valueOf(start), pageable);
+        } else if (end != null) {
+            attendancePage = attendanceRepository.findAllByAttendanceDateBetween(
+                    java.sql.Date.valueOf(end), java.sql.Date.valueOf(end), pageable);
         } else {
             attendancePage = attendanceRepository.findAll(pageable);
         }

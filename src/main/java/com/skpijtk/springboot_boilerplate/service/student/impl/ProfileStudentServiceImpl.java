@@ -61,6 +61,9 @@ public class ProfileStudentServiceImpl implements ProfileStudentService {
         } else if (start != null) {
             attendancePage = attendanceRepository.findAllByStudent_IdAndAttendanceDateBetween(
                     student.getId(), java.sql.Date.valueOf(start), java.sql.Date.valueOf(start), pageable);
+        } else if (end != null) {
+            attendancePage = attendanceRepository.findAllByStudent_IdAndAttendanceDateBetween(
+                    student.getId(), java.sql.Date.valueOf(end), java.sql.Date.valueOf(end), pageable);
         } else {
             attendancePage = attendanceRepository.findAllByStudent_Id(student.getId(), pageable);
         }
