@@ -1,7 +1,7 @@
 package com.skpijtk.springboot_boilerplate.validation;
 
+import com.skpijtk.springboot_boilerplate.dto.request.admin.appsettings.AppSettingsRequest;
 import com.skpijtk.springboot_boilerplate.dto.response.FieldErrorResponse;
-import com.skpijtk.springboot_boilerplate.dto.response.admin.appsettings.AppSettingsRequest;
 
 import java.util.ArrayList;
 import java.util.List;

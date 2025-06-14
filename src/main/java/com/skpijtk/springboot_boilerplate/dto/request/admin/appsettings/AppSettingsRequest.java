@@ -1,4 +1,4 @@
-package com.skpijtk.springboot_boilerplate.dto.response.admin.appsettings;
+package com.skpijtk.springboot_boilerplate.dto.request.admin.appsettings;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

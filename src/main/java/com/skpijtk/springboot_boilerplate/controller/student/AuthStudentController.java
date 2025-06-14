@@ -29,5 +29,4 @@ public class AuthStudentController {
         ApiResponse<LoginStudentResponse> response = new ApiResponse<>(responseData, ResponseMessage.LOGIN_SUCCESS);
         return ResponseEntity.ok(response);
     }
-
 }

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.skpijtk.springboot_boilerplate.constant.ResponseMessage;
+import com.skpijtk.springboot_boilerplate.dto.request.admin.appsettings.AppSettingsRequest;
 import com.skpijtk.springboot_boilerplate.dto.response.FieldErrorResponse;
-import com.skpijtk.springboot_boilerplate.dto.response.admin.appsettings.AppSettingsRequest;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.appsettings.AppSettingsResponse;
 import com.skpijtk.springboot_boilerplate.exception.ApiException;
 import com.skpijtk.springboot_boilerplate.model.AppSettings;

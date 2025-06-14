@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.skpijtk.springboot_boilerplate.constant.ResponseMessage;
+import com.skpijtk.springboot_boilerplate.dto.request.admin.appsettings.AppSettingsRequest;
 import com.skpijtk.springboot_boilerplate.dto.response.ApiResponse;
-import com.skpijtk.springboot_boilerplate.dto.response.admin.appsettings.AppSettingsRequest;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.appsettings.AppSettingsResponse;
 import com.skpijtk.springboot_boilerplate.service.admin.AppSettingsAdminService;
 
