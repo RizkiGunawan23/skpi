@@ -23,6 +23,7 @@ import com.skpijtk.springboot_boilerplate.dto.response.FieldErrorResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.common.AttendanceDataResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.common.StudentListPageResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.common.StudentListResponse;
+import com.skpijtk.springboot_boilerplate.dto.response.admin.studentmanagement.DeleteStudentResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.studentmanagement.StudentResponse;
 import com.skpijtk.springboot_boilerplate.exception.ApiException;
 import com.skpijtk.springboot_boilerplate.model.Attendance;
@@ -264,5 +265,22 @@ public class StudentManagementServiceImpl implements StudentManagementService {
                                 student.getSin(),
                                 user.getEmail(),
                                 new ArrayList<>());
+        }
+
+        @Override
+        @Transactional
+        public DeleteStudentResponse deleteStudent(Long studentId) {
+                Student student = studentRepository.findById(studentId)
+                                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
+                                                ResponseMessage.STUDENT_NOT_FOUND));
+
+                String studentName = student.getUser().getName();
+                studentRepository.delete(student);
+                userRepository.delete(student.getUser());
+
+                return new DeleteStudentResponse(
+                                student.getId().intValue(),
+                                studentName,
+                                student.getSin());
         }
 }
