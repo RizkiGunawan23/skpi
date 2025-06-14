@@ -6,5 +6,5 @@ import com.skpijtk.springboot_boilerplate.dto.response.admin.appsettings.AppSett
 public interface AppSettingsAdminService {
     AppSettingsResponse getAppSettings();
 
-    // AppSettingsResponse updateAppSettings(AppSettingsRequest request);
+    AppSettingsResponse updateAppSettings(AppSettingsRequest request);
 }

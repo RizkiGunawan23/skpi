@@ -10,6 +10,7 @@ public enum ResponseMessage {
     CHECKIN_SUCCESS("Checkin successful"),
     CHECKOUT_SUCCESS("Checkout successful"),
     DATA_SAVE_SUCCESS("Data successfully saved"),
+    APP_SETTINGS_UPDATE_SUCCESS("App settings successfully updated"),
 
     CHECKIN_LATE("Your checkin is late"),
     CHECKOUT_LATE("Your checkout is late"),
