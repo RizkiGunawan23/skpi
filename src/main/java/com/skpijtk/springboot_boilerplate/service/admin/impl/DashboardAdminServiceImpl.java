@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.skpijtk.springboot_boilerplate.constant.ResponseMessage;
 import com.skpijtk.springboot_boilerplate.dto.request.admin.dashboard.StudentAttendanceListQuery;
 import com.skpijtk.springboot_boilerplate.dto.request.admin.dashboard.StudentCheckinListQuery;
 import com.skpijtk.springboot_boilerplate.dto.response.FieldErrorResponse;
@@ -117,7 +118,7 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
         }
 
         if (attendancePage.getContent().isEmpty()) {
-            throw new ApiException("Student data not found.", HttpStatus.NOT_FOUND);
+            throw new ApiException(HttpStatus.NOT_FOUND, ResponseMessage.STUDENT_NOT_FOUND);
         }
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -227,7 +228,7 @@ public class DashboardAdminServiceImpl implements DashboardAdminService {
         }
 
         if (attendancePage.getContent().isEmpty()) {
-            throw new ApiException("Student data not found.", HttpStatus.NOT_FOUND);
+            throw new ApiException(HttpStatus.NOT_FOUND, ResponseMessage.STUDENT_NOT_FOUND);
         }
 
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

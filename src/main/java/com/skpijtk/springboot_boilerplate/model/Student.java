@@ -32,7 +32,7 @@ public class Student {
     @Column(name = "created_at", nullable = false, updatable = false, insertable = false)
     private Timestamp createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at", nullable = false, updatable = false, insertable = false)
     private Timestamp updatedAt;
 
     @OneToOne

@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.skpijtk.springboot_boilerplate.constant.ResponseMessage;
 import com.skpijtk.springboot_boilerplate.model.User;
 import com.skpijtk.springboot_boilerplate.repository.UserRepository;
 
@@ -92,7 +93,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     userDetails, null, Collections.singleton(authority));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (Exception e) {
-            writeErrorResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response, "Internal server error");
+            writeErrorResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response,
+                    ResponseMessage.INTERNAL_SERVER_ERROR.toString());
             return;
         }
         filterChain.doFilter(request, response);

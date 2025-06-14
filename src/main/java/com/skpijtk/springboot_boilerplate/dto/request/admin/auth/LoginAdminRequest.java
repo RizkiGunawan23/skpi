@@ -6,10 +6,10 @@ import lombok.Data;
 
 @Data
 public class LoginAdminRequest {
-    @NotBlank
-    @Email
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Invalid email format")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Password cannot be blank")
     private String password;
 }

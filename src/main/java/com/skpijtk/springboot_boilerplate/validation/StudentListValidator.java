@@ -1,6 +1,6 @@
 package com.skpijtk.springboot_boilerplate.validation;
 
-import com.skpijtk.springboot_boilerplate.dto.request.admin.dashboard.StudentListQuery;
+import com.skpijtk.springboot_boilerplate.dto.request.admin.studentmanagement.StudentListQuery;
 import com.skpijtk.springboot_boilerplate.dto.response.FieldErrorResponse;
 
 import java.time.LocalDate;

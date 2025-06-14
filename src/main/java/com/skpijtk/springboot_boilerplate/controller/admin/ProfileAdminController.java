@@ -1,5 +1,6 @@
 package com.skpijtk.springboot_boilerplate.controller.admin;
 
+import com.skpijtk.springboot_boilerplate.constant.ResponseMessage;
 import com.skpijtk.springboot_boilerplate.dto.response.ApiResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.profile.AdminProfileResponse;
 import com.skpijtk.springboot_boilerplate.service.admin.ProfileAdminService;
@@ -24,7 +25,8 @@ public class ProfileAdminController {
             @AuthenticationPrincipal UserDetails userDetails) {
         String email = userDetails.getUsername();
         AdminProfileResponse responseData = adminService.getAdminProfile(email);
-        ApiResponse<AdminProfileResponse> response = new ApiResponse<>(responseData, "Data successfully displayed");
+        ApiResponse<AdminProfileResponse> response = new ApiResponse<>(responseData,
+                ResponseMessage.DATA_DISPLAY_SUCCESS);
         return ResponseEntity.ok(response);
     }
 }

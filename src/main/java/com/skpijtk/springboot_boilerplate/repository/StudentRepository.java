@@ -7,4 +7,6 @@ import com.skpijtk.springboot_boilerplate.model.Student;
 
 public interface StudentRepository extends JpaRepository<Student, Long>, JpaSpecificationExecutor<Student> {
     long countByAttendanceListIsEmpty();
+
+    boolean existsBySin(String sin);
 }

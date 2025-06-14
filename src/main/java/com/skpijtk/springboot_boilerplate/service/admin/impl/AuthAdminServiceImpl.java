@@ -1,5 +1,6 @@
 package com.skpijtk.springboot_boilerplate.service.admin.impl;
 
+import com.skpijtk.springboot_boilerplate.constant.ResponseMessage;
 import com.skpijtk.springboot_boilerplate.dto.request.admin.auth.LoginAdminRequest;
 import com.skpijtk.springboot_boilerplate.dto.request.admin.auth.SignupAdminRequest;
 import com.skpijtk.springboot_boilerplate.dto.response.admin.auth.LoginAdminResponse;
@@ -32,7 +33,7 @@ public class AuthAdminServiceImpl implements AuthAdminService {
     @Transactional
     public SignupAdminResponse signupAdmin(SignupAdminRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new ApiException("Email already exists", HttpStatus.CONFLICT);
+            throw new ApiException(HttpStatus.CONFLICT, ResponseMessage.EMAIL_ALREADY_EXISTS);
         }
         User user = new User();
         user.setName(request.getName());
@@ -46,10 +47,10 @@ public class AuthAdminServiceImpl implements AuthAdminService {
     @Override
     public LoginAdminResponse loginAdmin(LoginAdminRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new ApiException("Invalid email or password", HttpStatus.UNAUTHORIZED));
+                .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, ResponseMessage.INVALID_CREDENTIALS));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new ApiException("Invalid email or password", HttpStatus.UNAUTHORIZED);
+            throw new ApiException(HttpStatus.UNAUTHORIZED, ResponseMessage.INVALID_CREDENTIALS);
         }
 
         String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());

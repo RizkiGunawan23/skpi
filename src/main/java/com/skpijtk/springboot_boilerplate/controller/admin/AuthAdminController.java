@@ -1,5 +1,6 @@
 package com.skpijtk.springboot_boilerplate.controller.admin;
 
+import com.skpijtk.springboot_boilerplate.constant.ResponseMessage;
 import com.skpijtk.springboot_boilerplate.dto.request.admin.auth.LoginAdminRequest;
 import com.skpijtk.springboot_boilerplate.dto.request.admin.auth.SignupAdminRequest;
 import com.skpijtk.springboot_boilerplate.dto.response.ApiResponse;
@@ -10,7 +11,7 @@ import com.skpijtk.springboot_boilerplate.service.admin.AuthAdminService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,14 +29,14 @@ public class AuthAdminController {
     public ResponseEntity<ApiResponse<SignupAdminResponse>> signupAdmin(
             @Valid @RequestBody SignupAdminRequest request) {
         SignupAdminResponse responseData = authService.signupAdmin(request);
-        ApiResponse<SignupAdminResponse> response = new ApiResponse<>(responseData, "Signup successful");
-        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(response);
+        ApiResponse<SignupAdminResponse> response = new ApiResponse<>(responseData, ResponseMessage.SIGNUP_SUCCESS);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/admin/login")
     public ResponseEntity<ApiResponse<LoginAdminResponse>> loginAdmin(@Valid @RequestBody LoginAdminRequest request) {
         LoginAdminResponse responseData = authService.loginAdmin(request);
-        ApiResponse<LoginAdminResponse> response = new ApiResponse<>(responseData, "Login successful");
+        ApiResponse<LoginAdminResponse> response = new ApiResponse<>(responseData, ResponseMessage.LOGIN_SUCCESS);
         return ResponseEntity.ok(response);
     }
 }

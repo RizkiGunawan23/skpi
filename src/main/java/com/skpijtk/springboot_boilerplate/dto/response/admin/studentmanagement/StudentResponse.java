@@ -1,4 +1,4 @@
-package com.skpijtk.springboot_boilerplate.dto.response.admin.dashboard;
+package com.skpijtk.springboot_boilerplate.dto.response.admin.studentmanagement;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class StudentDetailResponse {
+public class StudentResponse {
     private int studentId;
     private int userId;
     private String studentName;

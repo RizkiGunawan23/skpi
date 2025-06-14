@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import com.skpijtk.springboot_boilerplate.constant.ResponseMessage;
 import com.skpijtk.springboot_boilerplate.dto.response.ApiResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.FieldErrorResponse;
 import com.skpijtk.springboot_boilerplate.dto.response.ValidationErrorResponse;
@@ -97,7 +98,7 @@ public class GlobalExceptionHandler {
         public ResponseEntity<ApiResponse<Object>> handleAllExceptions(Exception ex) {
                 ApiResponse<Object> response = new ApiResponse<>(
                                 null,
-                                "Internal Server Error. Please try again");
+                                ResponseMessage.INTERNAL_SERVER_ERROR);
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
 }

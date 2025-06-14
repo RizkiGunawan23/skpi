@@ -1,4 +1,4 @@
-package com.skpijtk.springboot_boilerplate.dto.request.admin.dashboard;
+package com.skpijtk.springboot_boilerplate.dto.request.admin.studentmanagement;
 
 import lombok.Data;
 
